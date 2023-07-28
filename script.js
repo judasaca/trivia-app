@@ -23,3 +23,28 @@ getCategories().then((categories) => {
     category_options.appendChild(option);
   });
 });
+
+const drop_down_lists = document.getElementsByTagName("select");
+function validate_form() {
+  let all_selected = true;
+  for (let i = 0; i < drop_down_lists.length; i++) {
+    const value = drop_down_lists[i].value;
+    if (value === "Seleccionar...") {
+      all_selected = false;
+      break;
+    }
+  }
+  return all_selected;
+}
+
+const send_button = document.getElementById("send");
+for (let i = 0; i < drop_down_lists.length; i++) {
+  const list = drop_down_lists[i];
+  list.addEventListener("change", () => {
+    if (validate_form()) {
+      send_button.classList.add("active");
+    } else {
+      send_button.classList.remove("active");
+    }
+  });
+}
