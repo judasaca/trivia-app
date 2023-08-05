@@ -12,8 +12,12 @@
     <link rel="stylesheet" href="style.css" />
     <title>Trivia App</title>
   </head>
+  <!-- { "category": "Entertainment: Books", "type": "multiple", "difficulty":
+  "hard", "question": "In the Beatrix Potter books, what type of animal is Tommy
+  Brock?", "correct_answer": "Badger", "incorrect_answers": [ "Fox", "Frog",
+  "Rabbit" ] }, -->
   <body>
-    <div id="initial-form">
+    <div id="initial-form" class="container">
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <label class="input-group-text" for="difficultySelect"
@@ -47,6 +51,17 @@
       </div>
       <div id="button-container">
         <button id="send" class="button">Enviar</button>
+      </div>
+    </div>
+    <div class="container" id="result-form-trivia-container">
+      <div id="trivia"></div>
+      <div id="action-buttons">
+        <div class="action-button-container" id="cancel-exam">
+          <button class="button">Cancelar</button>
+        </div>
+        <div class="action-button-container" id="send-exam">
+          <button class="button">Enviar</button>
+        </div>
       </div>
     </div>
     <script
