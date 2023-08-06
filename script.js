@@ -103,6 +103,7 @@ async function generate_trivia() {
       form_container.appendChild(trivia_item);
     }
     trivia_container.style.display = "flex";
+    addValidationToSendExamButton();
   }
 }
 
@@ -156,7 +157,40 @@ async function cancel_exam() {
   setCategoryOptions();
   addValidationToSendButton();
   document.getElementById("send").addEventListener("click", generate_trivia);
+  document
+    .querySelector("#send-exam button")
+    .classList.remove("send-exam-active");
 }
 
 document.getElementById("send").addEventListener("click", generate_trivia);
 document.getElementById("cancel-exam").addEventListener("click", cancel_exam);
+
+function validateFilledExam() {
+  let filled = true;
+  for (let i = 1; i <= 10; i++) {
+    let checked_answer = document.querySelector(`input[name="q${i}"]:checked`);
+    if (checked_answer === null) {
+      filled = false;
+      break;
+    }
+  }
+  return filled;
+}
+
+function addValidationToSendExamButton() {
+  const send_exam_button = document.querySelector("#send-exam button");
+  const input_buttons = document.querySelectorAll(
+    "#trivia input[type='radio']"
+  );
+  console.log(input_buttons);
+  for (let i = 0; i < input_buttons.length; i++) {
+    const input_button = input_buttons[i];
+    input_button.addEventListener("change", () => {
+      if (validateFilledExam()) {
+        send_exam_button.classList.add("send-exam-active");
+      } else {
+        send_exam_button.classList.remove("send-exam-active");
+      }
+    });
+  }
+}
