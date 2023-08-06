@@ -98,3 +98,8 @@ input[type="radio"] {
   position: sticky;
   bottom: 0;
 }
+.button.cancel {
+  background: rgb(121, 4, 4);
+  color: white;
+  font-weight: 600;
+}

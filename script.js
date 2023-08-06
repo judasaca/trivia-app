@@ -14,20 +14,22 @@ async function getCategories() {
   return categories.trivia_categories;
 }
 
-const category_options = document.getElementById("categorySelect");
-
-getCategories().then((categories) => {
-  categories.forEach((element) => {
-    let { id, name } = element;
-    const option = document.createElement("option");
-    option.setAttribute("value", id);
-    option.textContent = name;
-    category_options.appendChild(option);
+function setCategoryOptions() {
+  const category_options = document.getElementById("categorySelect");
+  getCategories().then((categories) => {
+    categories.forEach((element) => {
+      let { id, name } = element;
+      const option = document.createElement("option");
+      option.setAttribute("value", id);
+      option.textContent = name;
+      category_options.appendChild(option);
+    });
   });
-});
+}
+setCategoryOptions();
 
-const drop_down_lists = document.getElementsByTagName("select");
 function validate_form() {
+  const drop_down_lists = document.getElementsByTagName("select");
   let all_selected = true;
   for (let i = 0; i < drop_down_lists.length; i++) {
     const value = drop_down_lists[i].value;
@@ -39,30 +41,31 @@ function validate_form() {
   return all_selected;
 }
 
-const send_button = document.getElementById("send");
-for (let i = 0; i < drop_down_lists.length; i++) {
-  const list = drop_down_lists[i];
-  list.addEventListener("change", () => {
-    if (validate_form()) {
-      send_button.classList.add("active");
-    } else {
-      send_button.classList.remove("active");
-    }
-  });
+function addValidationToSendButton() {
+  const drop_down_lists = document.getElementsByTagName("select");
+  const send_button = document.getElementById("send");
+  for (let i = 0; i < drop_down_lists.length; i++) {
+    const list = drop_down_lists[i];
+    list.addEventListener("change", () => {
+      if (validate_form()) {
+        send_button.classList.add("active");
+      } else {
+        send_button.classList.remove("active");
+      }
+    });
+  }
 }
-
+addValidationToSendButton();
 async function generate_trivia() {
   if (validate_form()) {
-    // if (true) {
     const input_form = document.getElementById("initial-form");
     input_form.style.display = "none";
     const category_id = document.getElementById("categorySelect").value;
     const answer_type = document.getElementById("typeSelect").value;
     const difficulty = document.getElementById("difficultySelect").value;
-    // const data = await getData("hard", "multiple", "10");
+
     const data = await getData(difficulty, answer_type, category_id);
 
-    console.log(data);
     const trivia_container = document.getElementById(
       "result-form-trivia-container"
     );
@@ -86,7 +89,7 @@ async function generate_trivia() {
         const answer = answers[j];
         const input_object = document.createElement("input");
         input_object.type = "radio";
-        input_object.id = `q${i + 1}-a${j + 1}`; // a1 debe ser variable
+        input_object.id = `q${i + 1}-a${j + 1}`;
         input_object.name = `q${i + 1}`;
         answer_container.appendChild(input_object);
 
@@ -100,8 +103,60 @@ async function generate_trivia() {
       form_container.appendChild(trivia_item);
     }
     trivia_container.style.display = "flex";
-    // form_container.style.setProperty("flex", "8");
   }
 }
-// generate_trivia().then(console.log("finalizado"));
+
+async function cancel_exam() {
+  const trivia_container = document.getElementById(
+    "result-form-trivia-container"
+  );
+  trivia_container.style.display = "none";
+  const form_container = document.getElementById("trivia");
+  form_container.innerHTML = "";
+  const input_form = document.getElementById("initial-form");
+  input_form.style.display = "block";
+  input_form.innerHTML = `
+  <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="difficultySelect"
+            >Dificultad</label
+          >
+        </div>
+        <select class="custom-select" id="difficultySelect">
+          <option selected>Seleccionar...</option>
+          <option value="easy">Facil</option>
+          <option value="medium">Medio</option>
+          <option value="hard">Dificil</option>
+        </select>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="typeSelect">Tipo</label>
+        </div>
+        <select class="custom-select" id="typeSelect">
+          <option selected>Seleccionar...</option>
+          <option value="multiple">Selección múltiple</option>
+          <option value="boolean">Verdadero / Falso</option>
+        </select>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="categorySelect">Categoría</label>
+        </div>
+        <select class="custom-select" id="categorySelect">
+          <option selected>Seleccionar...</option>
+        </select>
+      </div>
+      <div id="button-container">
+        <button id="send" class="button">Enviar</button>
+      </div>
+  `;
+  const send = document.getElementById("send");
+  send.classList.remove("active");
+  setCategoryOptions();
+  addValidationToSendButton();
+  document.getElementById("send").addEventListener("click", generate_trivia);
+}
+
 document.getElementById("send").addEventListener("click", generate_trivia);
+document.getElementById("cancel-exam").addEventListener("click", cancel_exam);
