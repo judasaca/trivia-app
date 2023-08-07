@@ -56,6 +56,28 @@ function addValidationToSendButton() {
   }
 }
 addValidationToSendButton();
+
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
+let CA = [];
 async function generate_trivia() {
   if (validate_form()) {
     const input_form = document.getElementById("initial-form");
@@ -75,7 +97,19 @@ async function generate_trivia() {
       let question = element.question;
       let correct_answer = element.correct_answer;
       let incorrect_answers = element.incorrect_answers;
-      let answers = [correct_answer, ...incorrect_answers];
+      let ordered_answers = [correct_answer, ...incorrect_answers];
+      let new_indexes = shuffle([0, 1, 2, 3]);
+      console.log(new_indexes);
+      let answers = new Array(ordered_answers.length);
+      for (let i = 0; i < new_indexes.length; i++) {
+        const new_index = new_indexes[i];
+        answers[new_index] = ordered_answers[i];
+      }
+      console.log(answers);
+      CA.push({
+        q: i + 1,
+        a: new_indexes[0] + 1,
+      });
       const trivia_item = document.createElement("div");
       trivia_item.classList.add("trivia-item");
       const question_item = document.createElement("p");
@@ -160,6 +194,7 @@ async function cancel_exam() {
   document
     .querySelector("#send-exam button")
     .classList.remove("send-exam-active");
+  CA = [];
 }
 
 document.getElementById("send").addEventListener("click", generate_trivia);
@@ -194,3 +229,29 @@ function addValidationToSendExamButton() {
     });
   }
 }
+
+function evaluateExam() {
+  if (validateFilledExam()) {
+    let points = 0;
+    for (let question_number = 1; question_number <= 10; question_number++) {
+      let answer = document.querySelector(
+        `input[name="q${question_number}"]:checked`
+      );
+      let id_answer = answer.id;
+      id_answer = id_answer.split("-")[1].replace("a", "");
+      id_answer = parseInt(id_answer);
+      if (CA[question_number - 1].a === id_answer) {
+        points += 100;
+      }
+    }
+    const popup = document.querySelector("#results-popup");
+    popup.style.display = "flex";
+    const popup_message = document.querySelector("#results-message");
+    popup_message.innerHTML = `Tu puntaje fue de ${points}`;
+    console.log("tu puntaje fue de " + points);
+  }
+}
+
+document
+  .querySelector("#send-exam button")
+  .addEventListener("click", evaluateExam);

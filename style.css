@@ -111,3 +111,30 @@ input[type="radio"] {
   scale: 1.1;
   box-shadow: 0px 0px 10px 0px rgb(146, 146, 146);
 }
+
+#results-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(128, 128, 128, 0.5);
+  z-index: 1000;
+}
+#results-window {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: 50vh;
+  background: rgb(219, 186, 0);
+  border: solid 3px black;
+  font-weight: 700;
+  z-index: 1500;
+
+  justify-content: center;
+  align-items: center;
+}
