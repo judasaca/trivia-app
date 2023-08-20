@@ -230,6 +230,28 @@ function addValidationToSendExamButton() {
   }
 }
 
+function color_answers() {
+  let answers = document.querySelectorAll(`.answer-container`);
+  for (let i = 0; i < answers.length; i++) {
+    const answer = answers[i];
+    answer.classList.add("wrong-answer");
+  }
+  for (let j = 0; j < CA.length; j++) {
+    let { q, a } = CA[j];
+    let correct_answer = document.querySelector(
+      `.answer-container:has(>#q${q}-a${a})`
+    );
+    correct_answer.classList.remove("wrong-answer");
+    correct_answer.classList.add("correct-answer");
+  }
+}
+function deactivateInputs() {
+  const inputs = document.querySelectorAll("input[type='radio']");
+  for (let i = 0; i < inputs.length; i++) {
+    const element = inputs[i];
+    element.disabled = true;
+  }
+}
 function evaluateExam() {
   if (validateFilledExam()) {
     let points = 0;
@@ -249,9 +271,21 @@ function evaluateExam() {
     const popup_message = document.querySelector("#results-message");
     popup_message.innerHTML = `Tu puntaje fue de ${points}`;
     console.log("tu puntaje fue de " + points);
+    color_answers();
+    deactivateInputs();
   }
 }
 
 document
   .querySelector("#send-exam button")
   .addEventListener("click", evaluateExam);
+
+function close_popup() {
+  const popup = document.querySelector("#results-popup");
+  popup.style.display = "none";
+  const popup_message = document.querySelector("#results-message");
+  popup_message.innerHTML = "";
+}
+document
+  .querySelector("#close-popup img")
+  .addEventListener("click", close_popup);

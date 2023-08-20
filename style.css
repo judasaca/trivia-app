@@ -75,6 +75,9 @@ input[type="radio"] {
 .answer-container {
   display: flex;
   align-items: center;
+  padding-left: 6px;
+  margin-bottom: 3px;
+  margin-right: 50px;
 }
 #action-buttons {
   flex: 2;
@@ -153,4 +156,13 @@ input[type="radio"] {
 #close-popup img {
   height: 100%;
   width: auto;
+}
+.wrong-answer {
+  background: rgb(255, 162, 162);
+  border-radius: 10px;
+  text-decoration: line-through;
+}
+.correct-answer {
+  background: rgb(144, 209, 144);
+  border-radius: 10px;
 }
