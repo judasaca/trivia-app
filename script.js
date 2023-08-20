@@ -97,19 +97,31 @@ async function generate_trivia() {
       let question = element.question;
       let correct_answer = element.correct_answer;
       let incorrect_answers = element.incorrect_answers;
-      let ordered_answers = [correct_answer, ...incorrect_answers];
-      let new_indexes = shuffle([0, 1, 2, 3]);
-      console.log(new_indexes);
-      let answers = new Array(ordered_answers.length);
-      for (let i = 0; i < new_indexes.length; i++) {
-        const new_index = new_indexes[i];
-        answers[new_index] = ordered_answers[i];
+      let answers;
+      if (answer_type === "multiple") {
+        let ordered_answers = [correct_answer, ...incorrect_answers];
+        let new_indexes = shuffle([0, 1, 2, 3]);
+        console.log(new_indexes);
+        answers = new Array(ordered_answers.length);
+        for (let i = 0; i < new_indexes.length; i++) {
+          const new_index = new_indexes[i];
+          answers[new_index] = ordered_answers[i];
+        }
+        CA.push({
+          q: i + 1,
+          a: new_indexes[0] + 1,
+        });
+      } else if (answer_type === "boolean") {
+        answers = ["True", "False"];
+        let question = i + 1;
+        let answ = correct_answer === true ? 1 : 2;
+        CA.push({
+          q: question,
+          a: answ,
+        });
+      } else {
+        throw new Error("Incorrect answer type: " + answer_type);
       }
-      console.log(answers);
-      CA.push({
-        q: i + 1,
-        a: new_indexes[0] + 1,
-      });
       const trivia_item = document.createElement("div");
       trivia_item.classList.add("trivia-item");
       const question_item = document.createElement("p");
